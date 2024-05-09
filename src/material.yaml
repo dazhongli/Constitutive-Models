@@ -1,0 +1,127 @@
+_physical_prop: &physical
+  gammaUnsat: 16
+  gammaSat: 16
+  eInit: 2.0
+  K0Determination: Automatic
+_oedometer_prop: &oedometer
+  nuUR: 0.20
+  eInit: 2.0
+  OCR: 1.0
+  POP: 0.0
+_strength_param: &strength
+  cRef: 0.01
+  psi: 0.0
+  phi: 25
+  Rinter: 0.75
+_permeability: &perm
+  PermHorizontalPrimary: 3.456e-4 #m/day
+  PermVertical: 1.94e-7 #m/day
+
+Linear_Elastic:
+  #General
+  SoilModel: Linear Elastic
+  Identification: Unset
+  <<: *physical
+  #Mechanical
+  Eref: 20000
+  nu: 0.2
+  K0Determination: Manual
+
+Mohr_Coulomb:
+  SoilModel: 2 #Linear Elastic
+  Identification: Unset
+  <<: *physical
+  Eref: 20000
+  nu: 0.25
+  phi: 32
+  cRef: 0.01
+
+Cam_Clay:
+  #General
+  SoilModel: Modified Cam-clay
+  Colour: 15245783
+  <<: *physical
+  DrainageType: Undrained A # Also possible `Drained`
+  # Deformation
+  lambda: 0.521 # 1.2/ln10
+  kappa: 0.0651
+  nuUR: 0.25
+  M: 0.984
+  K0Determination: Automatic # Also `Automatic`, `Manual`
+  OCR: 1.0
+  POP: 0
+  CInter: 0.1
+  PhiInter: 25
+  <<: *perm
+
+Soft_Soil:
+  #General
+  SoilModel: Soft Soil
+  Identification: Unset
+  Colour: 15245783
+  <<: *physical
+  DrainageType: Undrained A # Also possible `Drained`
+  # Deformation
+  lambdaModified: 0.174
+  kappaModified: 0.0271
+  nuUR: 0.25
+  cRef: 0.01
+  phi: 25
+  psi: 0.0
+  TensionCutOff: True
+  InterfaceStrengthDetermination: Manual
+  K0Determination: Automatic # Also `Automatic`, `Manual`
+  Rinter: 0.75
+  OCR: 1.0
+  POP: 0
+  <<: *perm
+
+Soft_Soil_Creep:
+  #General
+  SoilModel: Soft Soil Creep
+  Identification: Unset
+  <<: *physical
+  Colour: 15245783
+  DrainageType: Undrained A # Also possible Undrained A
+  # Deformation
+  lambdaModified: 0.174
+  kappaModified: 0.0217
+  muModified: 0.0076
+  nuUR: 0.25
+  cRef: 0.01
+  phi: 25
+  psi: 0.0
+  TensionCutOff: True
+  InterfaceStrengthDetermination: Manual
+  K0Determination: Automatic # Also `Automatic`, `Manual`
+  Rinter: 0.75
+  OCR: 1.0
+  POP: 0
+  #K0Primary: 0.0
+  <<: *perm
+
+# Hardening_Soil:
+#   #General
+#   SoilModel: Hardening Soil
+#   Identification: Unset
+#   gammaUnsat: 16
+#   gammaSat: 16
+#   eInit: 2.0
+#   Colour: 15245783
+#   DrainageType: Undrained A # Also possible Undrained B
+#   # Deformation
+#   lambdaModified: 1.0
+#   kappaModified: 2.0
+#   nuUR: 0.25
+#   cRef: 0.01
+#   phi: 25
+#   psi: 0.0
+#   TensionCutOff: False
+#   InterfaceStrengthDetermination: Manual
+#   K0Determination: Manual
+#   Rinter: 0.75
+#   OCR: 1.0
+#   POP: 0
+#   K0Primary: 0.0
+#   PermHorizontalPrimary: 0
+#   PermVertical:  0

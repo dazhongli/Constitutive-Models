@@ -27,7 +27,7 @@ $$
 where
 
 - $\alpha_s$ = area replacement ratio
-- $s_dm$ = design shear strength of the deep-mixed soils
+- $s_{dm}$ = design shear strength of the deep-mixed soils
 - $E_{dm}$ = design elastic modulus of deep mixed soils
 
 For a typical DCM treatment using wet mixing and good quality control, the elastic modulus of DCM may be taken as 300UCS, i.e., given a design UCS of 1MPa, the $E_dm$ = 300MPa.
@@ -72,6 +72,9 @@ Table: Advanced Materials Models for Soils in Plaxis \label{t_soil_model}
 | Hardening Soil Model  | $E_{50}, E_{oed}, E_{ref}$                   |         |
 | Hardening Soil Model  | $m=1$ for soft clay                          |         |
 
+## Hardening Soil Model
+
+Hardening soils allows alternative input parameters using $C_c$ and $C_s$, which is readily available from the odometer tests results.
 
 # Calibration of Soil Models
 
@@ -81,12 +84,13 @@ The following typical design parameters will be used for this calibration purpos
 
 Table:Design Parameters for Normally Consolidated Marine Deposit \label{t_design_params}
 
-| Desorption               | Notation |  Value |
-| ------------------------ | -------: | -----: |
-| Compression Index        |    $C_c$ |    1.2 |
-| Initial Void Ratio       |    $e_0$ |    2.0 |
-| Over Consolidation Ratio |    $OCR$ |    1.0 |
-| Thickness of Soils       |      $H$ | varies |
+| Desorption                    |  Notation |  Value |
+| ----------------------------- | --------: | -----: |
+| Compression Index             |     $C_c$ |    1.2 |
+| Initial Void Ratio            |     $e_0$ |    2.0 |
+| Over Consolidation Ratio      |     $OCR$ |    1.0 |
+| Submerged unit weight of soil | $\gamma'$ |    6.0 |
+| Thickness of Soils            |       $H$ | varies |
 
 $$
 \begin{equation}[label@eq_]
@@ -94,7 +98,7 @@ s_i = \frac{C_c}{1+e_0} \cdot \log\bigg(\frac{\sigma'_{vi} + \Delta\sigma_v}{\si
 \end{equation}
 $$
 
-For the normally consolidated clay with OCR of 1.0, the initial effective stress can be calculated as $\sigma'_{vi} = z \cdot \gamma$ and therefore the total settlement for a given thickness $H$ of MD can be calculated as 
+For the normally consolidated clay with OCR of 1.0, the initial effective stress can be calculated as $\sigma'_{vi} = z \cdot \gamma$ and therefore the total settlement for a given thickness $H$ of MD can be calculated as in Eq.(\ref{eq_stotal}).
 
 $$
 \begin{equation}[label@eq_]
@@ -102,6 +106,11 @@ s = \int_0^H \frac{C_c}{1+e_0} \log\bigg(\frac{z\cdot \gamma' + \Delta\sigma_v}{
 \end{equation}
 $$
 
+$$
+\begin{equation}[label@eq_stotal]
+S(H)= \frac{C_c}{1+e_0} \bigg[H \cdot \log\bigg(\frac{\Delta\sigma+\gamma'\cdot H}{\gamma' H}\bigg) - \frac{\Delta\sigma}{\gamma'}\log(\Delta\sigma) + \frac{\Delta\sigma}{\gamma'}\log(\Delta\sigma+\gamma'H)\bigg]
+\end{equation}
+$$
 
 \pagebreak
 
