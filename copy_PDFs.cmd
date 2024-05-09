@@ -1,0 +1,1 @@
+for /r "Stone_column.Data" %%i in (*.pdf) do copy "%%i" "PDF"

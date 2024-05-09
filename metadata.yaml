@@ -1,0 +1,46 @@
+title: "Recommended Soil Models and Parameters for Reclamation Design"
+subtitle: ""
+author: "Dazhong Li"
+email: "dazhong.li@aecom.com"
+fontsize: 11pt
+titlepage: true
+colorlinks: true
+geometry: "left=2cm,right=2cm,top=2.0cm,bottom=3.0cm"
+toc: true
+lof: true
+lot: true
+linestretch: 1.0
+papersize: a4
+bibliography:
+# csl: https://www.zotero.org/styles/chicago-author-date
+csl: "cambridge-university-press-author-date.csl"
+book: false
+date: \today
+link-citations: true
+titlepage-logo: "image/AECOM_logo.png"
+logo-width: 30mm
+math: "$$"
+mainfont: "Times New Roman"
+# caption-justification: centered 
+header-includes:
+- |
+  ```{=latex}
+  \usepackage{pdflscape}
+  \newcommand{\blandscape}{\begin{landscape}}
+  \newcommand{\elandscape}{\end{landscape}}
+    ```
+- \usepackage{chngcntr}
+- \counterwithin{equation}{section}
+- \counterwithin{table}{section}
+- \counterwithin{figure}{section}
+- \renewcommand{\theequation}{\thesection.\arabic{equation}}
+- \renewcommand{\thetable}{\thesection.\arabic{table}}
+- \renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+# Below give an example of how to reset the equation number, however, these should be included in the markdown main text
+# \setcounter{equation}{0}
+# \renewcommand{\theequation}{\thesection.\arabic{equation}}
+#\setcounter{table}{0}
+#\renewcommand{\thetable}{\thesection.\arabic{table}}
+#\setcounter{figure}{0}
+# \renewcommand{\thefigure}{\thesection.\arabic{figure}}
