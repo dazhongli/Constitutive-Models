@@ -24,7 +24,7 @@ def post_process(proj, filename):
     g_o = proj._g_o
     for phase in g_o.Phases:
         if phase.Name.value == 'InitialPhase':
-            pass
+            continue
         else:
             for step in phase.Steps:
                 val = g_o.getcurveresults(
@@ -49,8 +49,8 @@ def build_materials(proj, filename='./material.yaml'):
     x = utl.read_input_file(filename)
 
     for material_name in x:
-        if material_name[1] == '_': # we don't handle the anchors
-            pass
+        if material_name[0] == '_': # we don't handle the anchors
+            continue
 
         # material_name = 'Mohr_Coulomb'
         m_sand = x[material_name]

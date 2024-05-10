@@ -10,6 +10,7 @@ PANDOC_OPTIONS_COMMON = -s --listings --citeproc --metadata-file=metadata.yaml -
 PANDOC_OPTIONS = $(PANDOC_OPTIONS_COMMON) --number-sections --template=eisvogel
 PANDOC_OPTIONS_HTML = $(PANDOC_OPTIONS_COMMON) --lua-filter=parse-html.lua
 PANDOC_OPTIONS_DOC = $(PANDOC_OPTIONS_COMMON) --webtex --reference-doc="template.docx"
+NOTEBOOK_FILE :=Settlement_assessmetn.ipynb
 
 # Define a list of Python scripts to execute
 SCRIPTS = report
@@ -45,5 +46,7 @@ $(info MARKDOWN_FILES=$(MARKDOWN_FILES))
 %.txt: convert_data.py
 	python $< $*.md $@
 
+notebook:
+	jupyter nbconvert --to html --no-input --output-dir=$(HTML_OUTPUT_DIR) $(NOTEBOOK_FILE)
 clean:
 	rm -f output.pdf $(TEXT_FILES)

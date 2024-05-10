@@ -8,31 +8,31 @@ import  plotly.graph_objects as go
 from pathlib import Path
 from model import *
 from consolidation import consolidation_settlement, DoC_Barren_avg
+import socket
 
 def main():
     water_level=1.0
     width = 0.67
     # material_names = ['Soft_Soil','Soft_Soil_Creep']
-    material_names = ['Cam_Clay','Soft_Soil']
-    # material_names = ['Cam_Clay']
-    thks = [20]
+    material_names = ['Cam_Clay','Soft_Soil','Hardening_Soil','Soft_Soil_Creep']
+    # material_names = ['Soft_Soil_Creep']
+    thks = [10]
     # applied_loads=[20,40,80]
     seabed = -3
     #material_names = ['Soft_Soil_Creep']
     #thks = [4]
-    applied_loads = [20]
+    applied_loads = [20,200]
     Cc = 1.2
     e0 = 2.0
+    user_name = socket.gethostname()
+    user_profile = utl.read_input_file('userprofile.yaml')[user_name]
 
     for material_name in material_names:
         for thk in thks:
             for applied_load in applied_loads:
                 filename = f'{material_name}-thk={thk}-width={width}-q={applied_load:.0f}kPa'
                 print(f'processing - {filename}')
-                plaxis_path = r'C:\Program Files\Bentley\Geotechnical\PLAXIS 2D CONNECT Edition V22'
-                password = "Nv~?e5x5i32u#X/A"
-                # password = "%ufyhg5TSV1tN!3m"
-                proj = bp.BaseProject(openplaxis=False,plaxis_path=plaxis_path,password=password)
+                proj = bp.BaseProject(openplaxis=False,plaxis_path=user_profile['PLX_EXE_PATH'],password=user_profile['PLX_PASSWORD'])
                 proj.new_2Dproject(xmin_ip=0,xmax_ip=1,ymin_ip=-8,ymax_ip=0,project_title="Consolidation Analysis",usr_comment='',model_type='Axisymmetry')
                 g_i = proj.g_i
                 build_materials(proj)
@@ -50,8 +50,7 @@ def main():
                 g_o.addcurvepoint('node', g_o.Soil_1_1, (width/2, seabed))
                 g_o.update()
                 g_i.calculate()
-                proj.savecopy(r'C:\Users\Dell\OneDrive - AECOM\Project\PVD Design\Hypothesis B\DesignCheck\Plaxis Model',filename,'.p2dx')
-                # proj.savecopy(r'C:\Users\LiD9\OneDrive - AECOM\Project\PVD Design\Hypothesis B\DesignCheck\Plaxis Model',filename,'.p2dx')
+                proj.savecopy(user_profile['PLX_OUTPUT_PATH'],filename,suffix='.p2dx')
                 output_port = g_i.view(g_i.Phases[-1])
                 df = post_process(proj,filename)
                 settlement_infinity = consolidation_settlement(thk,applied_load,gamma=6,Cc=Cc, e0=e0)

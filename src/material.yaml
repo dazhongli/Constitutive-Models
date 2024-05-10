@@ -5,9 +5,10 @@ _physical_prop: &physical
   K0Determination: Automatic
 _oedometer_prop: &oedometer
   nuUR: 0.20
-  eInit: 2.0
-  OCR: 1.0
+  OCR: 1
   POP: 0.0
+  CC: 1.2
+  CS: 0.149
 _strength_param: &strength
   cRef: 0.01
   psi: 0.0
@@ -47,11 +48,9 @@ Cam_Clay:
   kappa: 0.0651
   nuUR: 0.25
   M: 0.984
-  K0Determination: Automatic # Also `Automatic`, `Manual`
-  OCR: 1.0
-  POP: 0
   CInter: 0.1
   PhiInter: 25
+  OCR: 1
   <<: *perm
 
 Soft_Soil:
@@ -59,69 +58,55 @@ Soft_Soil:
   SoilModel: Soft Soil
   Identification: Unset
   Colour: 15245783
-  <<: *physical
   DrainageType: Undrained A # Also possible `Drained`
   # Deformation
-  lambdaModified: 0.174
-  kappaModified: 0.0271
   nuUR: 0.25
-  cRef: 0.01
-  phi: 25
-  psi: 0.0
   TensionCutOff: True
   InterfaceStrengthDetermination: Manual
-  K0Determination: Automatic # Also `Automatic`, `Manual`
   Rinter: 0.75
-  OCR: 1.0
-  POP: 0
+  <<: *strength
   <<: *perm
+  UseAlternatives: True
+  <<: *oedometer
+  #lambdaModified: 0.174
+  #kappaModified: 0.0271
+  <<: *physical
 
 Soft_Soil_Creep:
   #General
   SoilModel: Soft Soil Creep
   Identification: Unset
-  <<: *physical
   Colour: 15245783
   DrainageType: Undrained A # Also possible Undrained A
   # Deformation
-  lambdaModified: 0.174
-  kappaModified: 0.0217
-  muModified: 0.0076
   nuUR: 0.25
-  cRef: 0.01
-  phi: 25
-  psi: 0.0
   TensionCutOff: True
   InterfaceStrengthDetermination: Manual
-  K0Determination: Automatic # Also `Automatic`, `Manual`
   Rinter: 0.75
-  OCR: 1.0
-  POP: 0
   #K0Primary: 0.0
+  <<: *physical
   <<: *perm
+  UseAlternatives: True
+  # lambdaModified: 0.174
+  # kappaModified: 0.0217
+  # muModified: 0.0076
+  CAlpha: 0.05
+  <<: *oedometer
+  <<: *strength
 
-# Hardening_Soil:
-#   #General
-#   SoilModel: Hardening Soil
-#   Identification: Unset
-#   gammaUnsat: 16
-#   gammaSat: 16
-#   eInit: 2.0
-#   Colour: 15245783
-#   DrainageType: Undrained A # Also possible Undrained B
-#   # Deformation
-#   lambdaModified: 1.0
-#   kappaModified: 2.0
-#   nuUR: 0.25
-#   cRef: 0.01
-#   phi: 25
-#   psi: 0.0
-#   TensionCutOff: False
-#   InterfaceStrengthDetermination: Manual
-#   K0Determination: Manual
-#   Rinter: 0.75
-#   OCR: 1.0
-#   POP: 0
-#   K0Primary: 0.0
-#   PermHorizontalPrimary: 0
-#   PermVertical:  0
+Hardening_Soil:
+  #General
+  SoilModel: Hardening Soil
+  Identification: Hardening_Soi
+  Colour: 15245783
+  DrainageType: Undrained A # Also possible Undrained B
+  # Deformation
+  nuUR: 0.25
+  TensionCutOff: True
+  InterfaceStrengthDetermination: Manual
+  Rinter: 0.75
+  <<: *physical
+  <<: *perm
+  <<: *strength
+  UseAlternatives: True
+  <<: *oedometer
