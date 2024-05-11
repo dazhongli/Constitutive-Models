@@ -2,7 +2,7 @@ title: "Recommended Soil Models and Parameters for Reclamation Design"
 subtitle: ""
 author: "Dazhong Li"
 email: "dazhong.li@aecom.com"
-fontsize: 11pt
+fontsize: 10pt
 titlepage: true
 colorlinks: true
 geometry: "left=2cm,right=2cm,top=2.0cm,bottom=3.0cm"
@@ -10,6 +10,7 @@ toc: true
 lof: true
 lot: true
 linestretch: 1.0
+code-block-font-size: \tiny # also \tiny
 papersize: a4
 bibliography:
 # csl: https://www.zotero.org/styles/chicago-author-date
