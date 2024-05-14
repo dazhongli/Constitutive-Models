@@ -16,7 +16,7 @@ _strength_param: &strength
   Rinter: 0.75
 _permeability: &perm
   PermHorizontalPrimary: 3.456e-4 #m/day
-  PermVertical: 1.94e-7 #m/day
+  PermVertical: 1.94e-10 #m/day
   VoidRatioDependency: True
   Ck: 1.2
 

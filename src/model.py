@@ -5,6 +5,7 @@ from plxscripting.easy import new_server
 from src.geoplot import GEOPlot
 import plotly.graph_objects as go
 import pandas as pd
+import numpy as np
 
 
 def flatten_dict(dictionary):
@@ -72,7 +73,9 @@ def build_model(proj,
                 width,
                 seabed,
                 thk,
-                applied_load, material_name):
+                applied_load,c_h=1.2,interval=1.0,material_name ='Hardening_Soil'):
+
+    mat_dicts = utl.read_input_file('material.yaml')
     g_i = proj._g_i
     g_i.gotosoil()
     proj.delete_all_bh()
@@ -83,25 +86,49 @@ def build_model(proj,
     thk = thk
     applied_load = applied_load
     g_i.SoilContour.initializerectangular(0, seabed-thk, width, seabed)
-    g_i.soillayer(-seabed+thk)
-    g_i.Soillayers[-1].Zones[0].Top = seabed
-    g_i.Soils[0].Material = getattr(g_i, material_name)
+    dict_soil_sample = mat_dicts[material_name].copy()
+    e0 = dict_soil_sample['eInit']
+    Cc = dict_soil_sample['CC']
+    gamma = dict_soil_sample['gammaSat']
+    for ix, i in enumerate(np.arange(0,thk,interval)):
+        print(ix, i)
+        E = 2.3*(1+e0) /Cc*(i+interval/2)*(gamma-10)
+        kh = 10*c_h/365/E # convert to days
+        mat_name = f"HS_{i+interval/2:02.1f}m".replace('.','_')
+        if ix==0:
+            g_i.soillayer(-seabed + interval)
+            g_i.Soillayers[0].Zones[0].Top=seabed
+        else:
+            g_i.soillayer(interval)
+        material = g_i.soilmat()
+        dict_soil_sample['PermHorizontalPrimary'] = kh
+        material.setproperties(*flatten_dict(dict_soil_sample))
+        material.Identification = mat_name
+        g_i.Soillayers[-1].Soil.Material = material
+
+    # ------------Loading-------------------- 
     g_i.gotostructures()
     line_load = g_i.lineload((0, seabed), (width, seabed))
     line_load[-1].q_start = applied_load
     plate = g_i.plate(line_load[-2])
     plate.Material = g_i.dummy_plate
-    x = g_i.drain((0, seabed), (0, seabed-thk))
+    g_i.drain((0.0331, seabed), (0.0331, seabed-thk))
+    g_i.point((width/2,seabed)) # we add a point in the middle for reference
     g_i.gotomesh()
     g_i.mesh(0.05)
 
-    # set flow condition
+    # ------------- set flow condition-----------------
     g_i.gotoflow()
-    g_i.Drains[0].h[g_i.InitialPhase] = 1
-    g_i.activate([g_i.GWFlowBaseBC_3, g_i.GWFlowBaseBC_2], g_i.InitialPhase)
-    g_i.GWFlowBaseBC_3.Behaviour[g_i.InitialPhase] = 'closed'
-    g_i.GWFlowBaseBC_2.Behaviour[g_i.InitialPhase] = 'closed'
-    water_level = g_i.waterlevel((-3, 1), (10, 1))
+    for drain in g_i.Drains:
+        drain.h[g_i.InitialPhase] = 0
+        g_i.activate(drain,g_i.InitialPhase)
+    for gw_bc in g_i.GWFlowBaseBC:
+        if (gw_bc.x_start[g_i.InitialPhase].value==width) and (gw_bc.x_end[g_i.InitialPhase].value==width):
+            gw_bc.Behaviour[g_i.InitialPhase] = 'closed'
+        else:
+            gw_bc.Behaviour[g_i.InitialPhase] = 'seepage'
+        # g_i.activate(gw_bc,g_i.InitialPhase)
+    water_level = g_i.waterlevel((-3,1),(10,1))
     g_i.setglobalwaterlevel(water_level, g_i.InitialPhase)
 
 
@@ -116,7 +143,7 @@ def build_stages(proj, step_size=3, n_step=12):
         this_phase.DeformCalcType = 'Consolidation'
         this_phase.TimeInterval = step_size**i
         this_phase.Identification = f'Consolidation at {step_size**i} days'
-        g_i.LineLoads[0].Active[this_phase] = True
+        g_i.activate(g_i.LineLoads,this_phase)
         g_i.activate(g_i.Drains, this_phase)
         g_i.activate(g_i.GroundwaterFlowBCs, this_phase)
         g_i.activate(g_i.Plates,this_phase)

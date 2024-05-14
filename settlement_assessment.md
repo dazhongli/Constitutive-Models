@@ -223,7 +223,7 @@ It is noted with constant permeability within marine deposit, the consolidation 
 From **Figure \ref{f_10m}**, other than Soft Soil Creep model, which incorporate the creep in to the calculation, the performance of the three models are quite similar
 
 
-## Change the Permeabiliy 
+## Change the Permeability  
 
 As we have demonstrated with the constant permeability throughout the entire the consolidation process, the consolidation will depend on the applied stresses. In this section, we will explain the cause of this and further setting that is necessary to make the numerical modelling yield a consistent with classic Terzaghi's consolidation theory.
 
@@ -244,6 +244,8 @@ $$
 ![Typical Stress Strain Relationship for Soft Soil \label{f_stress_strain}](image/stress_stain_soft_soil.pdf){width=300}
 
 As shown in **Figure \ref{f_stress_strain}**, as the soil consolidates, it gets stiffer with and increased compression modulus denoted as $E_{oed}$, and it can be expressed as Eq.(\ref{eq_Eoed}). If we maintain the permeability constant, according Eq.(\ref{eq_ch}), the coefficient will increase during the consolidation with an increased effective vertical stress.
+
+![Degree of Consolidation under Different Consolidation Pressure with Constant Permeability\label{f_doc_k_const}](image/Soft_Soil_Creep_H_10-DoC%20constant%20k.pdf){width=450}
 
 In Terzaghi's solution, the coefficient of the consolidation remains constant during the entire consolidation process. This assumptions was made simply to get a solution of the set of partial differential equations. To keep consistent with this assumption, we will need to have $c_{h,1} = c_{h,2}$, i.e., 
 
@@ -276,6 +278,18 @@ $$
 \log \bigg(\frac{k}{k_0}\bigg) = \frac{\Delta e}{c_k}
 \end{equation}
 $$
+
+![Degree of Consolidation under Different Consolidation Pressure with Changing Permeability\label{f_doc_change_k}](image/Soft_Soil_Creep_H_10-DoC%20changing%20k.pdf){width=450}
+
+As can be seen from **Figure \ref{f_doc_change_k}**, after considering the changing of permeability with $c_k = C_c$, the time-rate of consolidation under different loadings are getting similar.
+
+## Initial 
+
+In the preceding section, we have demonstrated that it is necessary update the permeability order to be consistent with the classical consolidation theory that the coefficient of consolidation remains constant throughout the entire consolidation process. In this section, we will further investigation how to specify the permeability which was left unaddressed so far. 
+
+In the intial design the coefficient is typically used and often this is based on the back-calculated data from previous experience. Based on the experience of the recent reclamation project, a lumped $c_h = 1.2m^2/year$ is considered, this lumped parameter is supposed to already accounted for the smear effect and well-resistance which is typically difficult to quantify with accuracy.
+
+To compare with the analytical solutions, we will this $c_h$ is constant within the entire layer of MD. As 
 
 ### DCM Treated Area
 
@@ -313,4 +327,6 @@ Despite the ongoing As we have demonstrated above, Hypothesis B does provide an 
 
 
 \pagebreak
+
+
 # Reference
