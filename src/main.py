@@ -14,12 +14,12 @@ def main():
     water_level=1.0
     width = 0.63
     # material_names = ['Soft_Soil','Soft_Soil_Creep']
-    material_names = ['Cam_Clay','Soft_Soil','Hardening_Soil','Soft_Soil_Creep']
-    # material_names = ['Hardening_Soil']
-    # intervals = [10/2,10/4,10/10]
-    intervals = [10]
-    thks = [10,20]
-    applied_loads=[20,200]
+    # material_names = ['Cam_Clay','Soft_Soil','Hardening_Soil','Soft_Soil_Creep']
+    material_names = ['Hardening_Soil']
+    intervals = [10/2,10/4,10/8,10/16]
+    # intervals = [10]
+    thks = [10]
+    applied_loads=[200]
     seabed = -3
     #material_names = ['Soft_Soil_Creep']
     #thks = [4]
@@ -61,19 +61,5 @@ def main():
                     # df['Barron'] = DoC_Barren_avg(c_h =0.869, t = df.time/365, d=0.064, D_e=1.133)*settlement_infinity
                     df.to_json('output/'+filename+'.json')
 
-    #do the post process
-    # fig = GEOPlot.get_figure()
-    # output_path = Path('output')
-    # for file in output_path.glob('*.json'):
-    #     with open(file) as fin:
-    #         data = json.load(fin)
-    #         df = pd.DataFrame(data)
-    #     fig.add_trace(go.Scatter(x=df.time, y=df.y,name=file.stem))
-    #     fig.add_trace(go.Scatter(x=df.time, y=df.Barron, name=file.stem+'(Barron)'))
-    # fig.update_xaxes(type='log',title='Time(days)')
-    # fig.update_yaxes(range=[df.y.max()*1.1, 0],title = 'Settlement(m)')
-    # fig.update_layout(width=1000,height=600,legend=dict(orientation='h'))
-    # fig.write_html('output/combined.html')
-                # proj.s_i.close()
 if __name__ == "__main__":
     main()

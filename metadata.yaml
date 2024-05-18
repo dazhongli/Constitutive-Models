@@ -41,6 +41,7 @@ header-includes:
 # Below give an example of how to reset the equation number, however, these should be included in the markdown main text
 # \setcounter{equation}{0}
 # \renewcommand{\theequation}{\thesection.\arabic{equation}}
+
 #\setcounter{table}{0}
 #\renewcommand{\thetable}{\thesection.\arabic{table}}
 #\setcounter{figure}{0}

@@ -18,7 +18,7 @@ This note offers commentaries on the material models available in Plaxis. It als
 
 In the case of seawall design for reclamation, the primary focus is on the temporary conditions during the construction phase. These conditions involve significant surcharge loading on the seawall while the strength of the marine deposit remains insufficiently improved. Due to the low permeability of both the MD and deep-mixed soils, undrained analyses are essential to accurately assess stability. To ensure a well-defined strength reduction approach and certainty regarding shear strength at failure, it is recommended to employ the _Mohr-Coulomb model_.
 
-As shear walls are typically arranged perpendicular to the seawall cope line, the DCM-treated area beneath the seawall is commonly represented as a composite mass in a two-dimensional plane strain modelthe mechanical properties of the composite mass are expressed using Eq.(\ref{eq_su_comp}) and Eq.(\ref{eq_E_comp}). It is important to note that the contribution from the soft soils is conservatively disregarded in this representation.
+As shear walls are typically arranged perpendicular to the seawall cope line, the DCM-treated area beneath the seawall is commonly represented as a composite mass in a two-dimensional plane strain model the mechanical properties of the composite mass are expressed using Eq.(\ref{eq_su_comp}) and Eq.(\ref{eq_E_comp}). It is important to note that the contribution from the soft soils is conservatively disregarded in this representation.
 
 $$
 \begin{equation}[label@eq_su_comp]
@@ -68,18 +68,18 @@ Compared the `Mohr-Coulumb` model, the advanced soil models have several feature
 - nonlinear stiffness of soils
 - higher unloading-reloading stiffness
 
+## Available Advanced Soil Models
+
 There are several available advanced soil models available in Plaxis that are intended for soft clay including:
 
-- Modified Camclay model
-- Soft Soil Model
-- Soft Soil Creep Model
-- Hardening Soil Model
+- Modified Camclay model (MCC)
+- Soft Soil Model (SS)
+- Soft Soil Creep Model (SSC)
+- Hardening Soil Model (HS)
 
 Other soil models exsit taking account of strength annostrop, NGI ADP model and cyclic behaviour soils UDCAM-S model which are generally not the primary concern for a reclamation projects.
 
 To investigate the predictive capability of different material models for consolidation analyese, a series of FEA experiments were carried out and results are compared with the classic
-
-![Plaxis Model \label{f_plaxi_model}](image/mode_set_up_Layer%201_copy_1.pdf){width=250}
 
 ## Settlement Predictive Capacities of the Existing Advanced Soil Models
 
@@ -89,30 +89,45 @@ To calculate the time-rate of the settlement, advanced soil models should be use
 
 Table: Advanced Materials Models for Soils in Plaxis \label{t_soil_model}
 
-| Soil Model            | Required Input                               | Remarks |
-| --------------------- | -------------------------------------------- | ------- |
-| Modified Camclay      | $\lambda = \frac{C_c}{2.3}$                  |         |
-|                       | $\kappa = \frac{C_s}{2.3}$                   |         |
-|                       | $M_{SCL} = \frac{C_s}{2.3}$                  |         |
-| Soil Soil Model       | $\lambda^* = \frac{C_s}{2.3(1+e_0)}$         |         |
-|                       | $\kappa^* \approx \frac{2.0C_s}{2.3(1+e_0)}$ |         |
-| Soil Soil Creep Model | $\lambda^*, \kappa^*$                        |         |
-| Hardening Soil Model  | $E_{50}, E_{oed}, E_{ref}$                   |         |
+| Soil Model            | Required Input                               | Remarks                        |
+| --------------------- | -------------------------------------------- | ------------------------------ |
+| Modified Camclay      | $\lambda = \frac{C_c}{2.3}$                  |                                |
+|                       | $\kappa = \frac{C_s}{2.3}$                   |                                |
+|                       | $M\_{SCL} = Eq.(\ref{eq_MMCC})               |                                |
+| Soil Soil Model       | $\lambda^* = \frac{C_s}{2.3(1+e_0)}$         |                                |
+|                       | $\kappa^* \approx \frac{2.0C_s}{2.3(1+e_0)}$ |                                |
+| Soil Soil Creep Model | $\lambda^*, \kappa^*$                        |                                |
+| Hardening Soil Model  | $E_{50}^{ref}, E_{oed}^{ref}, E_{ur}^{ref}$  | Refer to Section \ref{HS_Parm} |
 
 ### Modified Camclay Model (MCC)
+
+MCC is s classic critical state model
 
 According @Plaxis2021Mat[p.98], MCC model can be treated as an educational model available in Plaxis, its use in practical application is not recommended.
 
 > The Modified Cam-Clay model may allow for extremely large shear stresses. This is particularly the case for stress paths that cross the critical state line. Furthermore, the Modified Cam-Clay model may give softening behaviour for particular stress paths. Without special regularization techniques, softening behaviour may lead to
 > mesh dependency and convergence problems of iterative procedures. Moreover, the Modified Cam-Clay model cannot be used in combination with Safety analysis by means of phi-c reduction. The use of the Modified CamClay model in practical applications is not recommended.
 
+In Plaxis, the MCC model was implemented with a Drucker-Prager failure surface, i.e., representing a cone in the principle stress space, rather than the Mohr-Coulomb failure surface commonly adopted. The $M$ value is therefore should be determined based on the stress state. In the following numerical experiments as the only consolidation analyses are concerned, we will use $\frac{6\sin(\varphi)}{3+\sin(\varphi)}$.
+
+$$
+\begin{equation}[label@eq_MMCC]
+M =
+\begin{cases}
+\frac{6 \sin \varphi}{3 - \sin \varphi} & \text{(for initial compression stress states)} \quad (\sigma_1' < \sigma_2' = \sigma_3') \\
+\frac{6 \sin \varphi}{3 + \sin \varphi} & \text{(for initial compression stress states)} \quad (\sigma_1' = \sigma_2' \leq \sigma_3') \\
+\sqrt{3} \sin \varphi & \text{(for plane strain stress states)}
+\end{cases}
+\end{equation}
+$$
+
 ### Soft Soil Model
 
-## Hardening Soil Model (HS)
+### Hardening Soil Model (HS)
 
 Soft soils can be analyzed with the HS; however, the hardening soil models are not suitable for very soft soil with high compressibility, i.e., $E_{oed}^{ref}/E_{50}^{ref}<0.5$ [@Plaxis2021Mat, p.110].
 
-## Soft Soil Creep Model
+### Soft Soil Creep Model
 
 The most significant feature of this model is that it can consider creep of the clay, i.e., commonly known as the secondary compression. There is ongoing debate on the uniqueness of the end-of-primary void ratio, two different side of supporter on this issue for Hypothesis A and Hypothesis B.
 
@@ -120,13 +135,13 @@ The use of this model will yield larger settlement given fed with the same set o
 
 It is commented that this model is very sensitive to the specified OCR and can lead to significant amount of the creep settlement from model and is not recommended by @Karstunen2017 for engineers.
 
-### Comparison of the Predictive Capabilities of the Advanced Constitutive Models
+## Comparison of the Predictive Capabilities of the Advanced Constitutive Models
 
 In this section, we will investigate the predictive capability of the available available soil models in **Table \ref{t_soil_model}** in terms of the consolidation analyses. Reclamation design is customarily carried assuming the 1D consolidation theory and applying Terzaghi's consolidation theory [@Terzaghi1943] or Barron's theory [@barron1948consolidation] when vertical drains are introduced. In the following numerical experiments, a series of unit cell models will be carried with same model configuration and soil properties, four(4) different soils model that are relevant to the consolidation analysis are employed to show the difference both the predicted total settlement as well as the associated time rate. The calculated results are then compared with that by 1D consolidation theory as recommended in Port Work Design Manual Part 3 [@CEO2002].
 
 It should be noted that total magnitude of the consolidation is relatively less of uncertainty compared with rate of consolidation, which is subject to a number of factors that is normally difficult to quantify e.g., smear effect, well-resistance.
 
-## Normally Consolidated Clay
+![Axisymetric Plaxis Model \label{f_plaxi_model}](image/mode_set_up_Layer%201_copy_1.pdf){width=250}
 
 The following typical design parameters will be used for this calibration purpose.
 
@@ -139,6 +154,8 @@ Table:Design Parameters for Normally Consolidated Marine Deposit \label{t_design
 | Over Consolidation Ratio      |     $OCR$ |    1.0 |
 | Submerged unit weight of soil | $\gamma'$ |    6.0 |
 | Thickness of Soils            |       $H$ | varies |
+
+In all analyses, **Undrained A** in Plaxis is used consistently cross all soil models.
 
 $$
 \begin{equation}[label@eq_]
@@ -212,25 +229,22 @@ Table:Ultimate Consolidation Settlement for OCR=2.0, H=10m (1D) \label{t_s_OCR2_
 |            20 | 2.0 |       0.53 | Calculated with spreadsheet |
 |           200 | 2.0 |       3.14 | Calculated with spreadsheet |
 
-## Consolidation without Change in Permeability
+## Consolidation without Void Ratio Dependency
 
-It is noted with constant permeability within marine deposit, the consolidation under higher surcharge loading occurs much faster than under lower loading comparing **Figure \ref{f_OCR1_20kPam}** and **Figure \ref{f_OCR1_200kPam}**. It is shown from these figures, that the predictive capacity of Soft Soil Model and Hardening in terms of consolidation analysis are almost identical, whereas the Modified Camclay model, serving an educational model in Plaxis appears to overestimate of the total settlement.
+![Settlement Curve for Various Soil Models \label{f_settlement_const_k}](image/OCR_1_ck_no_activate.pdf){width=650}
 
-![Settlement Curve for 10m Marine Deposit (OCR=1, $\Delta\sigma$ =20kPa and H = 10m)\label{f_OCR1_20kPam}](image/Soft_Soil_Creep_H_10_20kPa_OCR=1.pdf){width=550}
+**Figure \ref{f_settlement_const_k}** illustrates the settlement behaviour of a 10-m thick marine deposit under two different stress levels, as modelled using various soil models. The Hardening Soil and Soft Soil models exhibit similar predictive capabilities, closely aligning with the theoretical 1D consolidation results. This indicates their effectiveness in capturing total settlement behaviour against 1D consolidation theory. In contrast, the Modified Cam Clay model shows a greater total settlement compared to the 1D consolidation theory, suggesting a tendency to overestimate settlement (**DONT KNOW WHY**). The Soft Soil Creep model, as expected, predicts a linear increase (in logarithmic scale) in settlement after the consolidation phase, reflecting the ongoing deformation due to creep.
 
-![Settlement Curve for 10m Marine Deposit (OCR=1, $\Delta\sigma$ =200kPa and H = 10m)\label{f_OCR1_200kPam}](image/Soft_Soil_Creep_H_10_200kPa_OCR=1.pdf){width=550}
+It should be noted that in this series of analyses, we assumed that permeability of material remain constant during the entire process. Under this assumption, the consolidation under higher surcharge loading occurs much faster than under lower loading. This can be better illustrated by plotting the data in terms of degree of consolidation in **Figure \ref{f_doc_change_k}**. In the figure, the degree of consolidation by Barron's solution for different stress level overlap and it is clear that the black lines (200kPa) are much earlier than the blue lines(20kPa).
 
-![Settlement Curve for 10m Marine Deposit (OCR=2, $\Delta\sigma$ =20kPa and H = 10m)\label{f_OCR2_20kPam}](image/Soft_Soil_Creep_H_10_20kPa_OCR=2.pdf){width=550}
+![Degree of Consolidation for Various Soil Model (Constant Permeability) \label{f_doc_const_k}](image/DOC_OCR_1_ck_no_activate.pdf){width=650}
 
-![Settlement Curve for 10m Marine Deposit (OCR=2, $\Delta\sigma$ =200kPa and H = 10m)\label{f_OCR2_100kPa}](image/Soft_Soil_Creep_H_10_200kPa_OCR=2.pdf){width=550}
 
-From **Figure \ref{f_10m}**, other than Soft Soil Creep model, which incorporate the creep in to the calculation, the performance of the three models are quite similar
+## Consolidation with Void Ratio Dependency
 
-## Change the Permeability
+As we have demonstrated in the preceding section with the assumption of constant permeability throughout the entire consolidation process, the rate of consolidation depends on the applied stresses. In this section, we will explain the cause of this phenomenon and further considerations necessary to make the numerical modelling consistent with classic Terzaghi's consolidation theory.
 
-As we have demonstrated with the constant permeability throughout the entire the consolidation process, the consolidation will depend on the applied stresses. In this section, we will explain the cause of this and further setting that is necessary to make the numerical modelling yield a consistent with classic Terzaghi's consolidation theory.
-
-For consolidation analyses, the degree of consolidation at any time $t$ is governed by a coefficient of consolidation, defined in Eq.(\ref{eq_ch}). This reflect the two factors that contribute to the consolidation, $E_oed$ is constrained modulus and $k$ is the permeability of materials.
+For simplicity of discussion, consider only the horizontal drainage. In Terzaghi and Barron's solution, the degree of consolidation at any time t is governed by a coefficient of consolidation, defined in Eq.(\ref{eq_ch}). This reflects the two factors that contribute to consolidation - $E_oed$, the constrained modulus, and $k$, the permeability of the material.
 
 $$
 \begin{equation}[label@eq_ch]
@@ -246,11 +260,11 @@ $$
 
 ![Typical Stress Strain Relationship for Soft Soil \label{f_stress_strain}](image/stress_stain_soft_soil.pdf){width=300}
 
-As shown in **Figure \ref{f_stress_strain}**, as the soil consolidates, it gets stiffer with and increased compression modulus denoted as $E_{oed}$, and it can be expressed as Eq.(\ref{eq_Eoed}). If we maintain the permeability constant, according Eq.(\ref{eq_ch}), the coefficient will increase during the consolidation with an increased effective vertical stress.
+As shown in **Figure \ref{f_stress_strain}**, as the soil consolidates, it gets stiffer with an increased compression modulus denoted as $E_{oed}$, and it can be expressed as Eq.(\ref{eq_Eoed}). If we maintain the permeability constant, according Eq.(\ref{eq_ch}), the coefficient will increase during the consolidation with an increased effective vertical stress.
 
 ![Degree of Consolidation under Different Consolidation Pressure with Constant Permeability\label{f_doc_k_const}](image/Soft_Soil_Creep_H_10-DoC%20constant%20k.pdf){width=450}
 
-In Terzaghi's solution, the coefficient of the consolidation remains constant during the entire consolidation process. This assumptions was made simply to get a solution of the set of partial differential equations. To keep consistent with this assumption, we will need to have $c_{h,1} = c_{h,2}$, i.e.,
+In Terzaghi's classic solution, the coefficient of consolidation is assumed to remain constant throughout the entire consolidation process. This simplifying assumption allowed Terzaghi to obtain a solution to the governing partial differential equations. To maintain consistency with Terzaghi's conceptual model, wherein the coefficient remains unchanged over time, the numerical modeling must likewise satisfy $c_{h,1} = c_{h,2}$. In other words, the coefficient of consolidation calculated at any two points in time during the consolidation process must be equal. This constraint is necessary to achieve solutions that align with Terzaghi's theory, in which consolidation is modeled as a linear, time-dependent process governed by a fixed coefficient.  
 
 $$
 \begin{equation}[label@eq_k_stress]
@@ -282,41 +296,45 @@ $$
 \end{equation}
 $$
 
-![Degree of Consolidation under Different Consolidation Pressure with Changing Permeability\label{f_doc_change_k}](image/Soft_Soil_Creep_H_10-DoC%20changing%20k.pdf){width=450}
+![Settlement of Curve for Various Soil Model (with void ratio dependency) \label{f_settlement_k_vary}](image/OCR_1_ck_activate.pdf){width=650}
 
-As can be seen from **Figure \ref{f_doc_change_k}**, after considering the changing of permeability with $c_k = C_c$, the time-rate of consolidation under different loadings are getting similar.
+![Degree of Consolidation for Various Soil Model (with void ratio dependency) \label{f_doc_k_vary}](image/DOC_OCR_1_ck_activate.pdf){width=650}
 
 ## Initial Stiffness and Convergence Analysis
 
-In the preceding section, we have demonstrated that it is necessary update the permeability order to be consistent with the classical consolidation theory that the coefficient of consolidation remains constant throughout the entire consolidation process. In this section, we will further investigation how to specify the permeability which was left unaddressed so far.
+In the preceding sections, we have demonstrated that it is necessary to update the permeability in order to remain consistent with the classical consolidation theory wherein the coefficient of consolidation is assumed to remain constant throughout the entire consolidation process. In this section, we will conduct further investigation into how to appropriately specify the permeability parameter, an issue that has yet to be addressed.
 
-In the intial design the coefficient is typically used and often this is based on the back-calculated data from previous experience. Based on the experience of the recent reclamation project, a lumped $c_h = 1.2m^2/year$ is considered, this lumped parameter is supposed to already accounted for the smear effect and well-resistance which is typically difficult to quantify with accuracy.
+In the initial design phase, the coefficient of consolidation is typically used and often this value is based on back-calculated data from previous, similar projects. Based on experience from a recent reclamation project, a lumped $c_h = 1.2\;m^2/\text{year}$ is considered appropriate. This lumped parameter is intended to already account for effects like soil smear and well resistance that are typically difficult to quantify with full accuracy during the initial design stage.
 
-To compare with the analytical solutions, we will this $c_h$, 
+The results presented so far are based on a single layer the permeability is back-calculated at the mid point of the soil layer (refer to **Appendix A** for an example of 2.5m).  We will further divide the soil layers in to smaller segments and specify the permeability at different levels (as shown in **Figure \ref{f_soil_segment}**), in such a way, the calculated results will theoretically approach a constant $c_h$ assumption. In this exercise, Hardening Soil Model will be used.
 
-### Parameters in Hardening Soil Model
+![Soil Segments \label{f_soil_segment}](image/soi_segment.pdf){width=450}
 
-We have demonstrated that the hardening soil model, which is the latest soil with an attempt to improve the prediction performance over the educational model Modified Camclay model and as and extension of soft soil model. In this section, the input parameter is discussed and how the design parameters can be approximated.
+![Settlement vs Soil Segments (Hardening Soil Model) \label{f_convergency}](image/convergency.pdf){width=650}
 
-In Hardening soil model, it is assumed that the stiffness varies with the stress level as shown in Eq.XXX and Eq.XXX and Eq.xXX, i
+## Parameters in Hardening Soil Model {#HS_Parm}
+
+We have demonstrated that the hardening soil model, which represents the latest attempt to improve predictive performance over the established Modified Camclay model and as an extension of soft soil models. In this section, we discuss the input parameters and how design parameters can be approximated.
+
+In Hardening soil model, it is assumed that the stiffness varies with the stress level as shown in Eq.(\ref{eq_oed}), Eq.(\ref{eq_E50}) and Eq.(\ref{eq_Eur})
 
 It should be noted that for $E_{oed}^{ref}$ the reference stress is $\sigma_1'$ whereas for $E_{ur}^{ref}$ and $E_{50}^{ref}$, the reference stress is $\sigma'_3$, this is to be consistent with the testing method, that is, the $E_{oed}$ is determined from the oedometer tests, the stress level specified is typically $\sigma_1$ while the $E_{50}^{ref}$ and $E_{ur}^{ref}$ are determined from the triaxial test, the specified stress level is the confining pressure, i.e., $\sigma_3$.
 
-We will limit our discussion for now on soft soil only, though Hardening soils can also be used for granular material. 
+We will limit our discussion for now on soft soil only, though Hardening soils can also be used for granular material.
 
-$$ 
+$$
 \begin{equation}[label@eq_oed]
 E_{\text{oed}} = E_{\text{oed}}^{\text{ref}} \left( \frac{-\sigma_{1}'}{p^{\text{ref}}} \right)^m
 \end{equation}
 $$
 
-$$ 
+$$
 \begin{equation}[label@eq_E50]
 E_{50} = E_{50}^{\text{ref}} \left( \frac{c\cos(\varphi) - \sigma_{3}'\sin(\varphi)}{c\cos(\varphi) + p^{\text{ref}}\sin(\varphi)} \right)^m
 \end{equation}
 $$
 
-$$ 
+$$
 \begin{equation}[label@eq_Eur]
 E_{ur} = E_{ur}^{\text{ref}} \left( \frac{c\cos(\varphi) - \sigma_{3}'\sin(\varphi)}{c\cos(\varphi) + p^{\text{ref}}\sin(\varphi)} \right)^m
 \end{equation}
@@ -326,23 +344,57 @@ $$
 
 ### Design Parameters for Marine Deposit in Hong Kong
 
-#### $m$ 
+**$m$**
 
 m =1 is a good estimate of the most of the soft soils and such assumption is consistent with the conventional assumption on consolidation assessment, please see Eq.(\ref{eq_eq_Eoed}), where we've already implicitly assumed $m=1$, i.e., the compression curve is linear in $e-\log\sigma$ space.
 
-#### $E_{oed}$ 
+**i$E_{oed}$**
 
-$E_{oed}$ is defined as 
+$E_{oed}^[ref]$ can be determined using Eq.(\ref{eq_oed}) by relating to compression index $C_c$ and as shown in **Table \ref{t_typical_value}**, the compression index of MD vary within a relatively narrow range and in a order of 1.0 for recent reclamation projects.
 
+\blandscape
 
+Table:Some Properties of Marine Mud[@Kwong1997, p.30]\label{t_typical_value}
 
-### DCM Treated Area
+| Reference              | Premchitt & Shaw (1991) | Foott et al (1987) | Premchitt et al (1990)   | Lumb (1977) | Bramall & Raybould (1993) | Scott Wilson Kirkpatrick & Partners (1987) | Mott MacDonald et al (1991) | Maunsell Geotechnical Services Ltd. (1995) | Maunsell Geotechnical Services Ltd. (1995) | Hunt et al (1982) | Carter (1996) |
+| ---------------------- | ----------------------- | ------------------ | ------------------------ | ----------- | ------------------------- | ------------------------------------------ | --------------------------- | ------------------------------------------ | ------------------------------------------ | ----------------- | ------------- |
+| Site                   | CLK                     | CLK                | CLK                      | LCK         | LCK                       | LCK                                        | TC                          | NLE                                        | CT10/CT11                                  | CPB               | Macau         |
+| PI (%)                 | 50                      | 45-65              | 30-70                    | 30          | 24-35                     | 29                                         | 20-60                       | 41-42                                      | 40                                         | 20-40             | 30-40         |
+| LL (%)                 | -                       | 70-100             | 55-95                    | 58          | 45-74                     | 57                                         | 60-80                       | 72-84                                      | 74                                         | 45-70             | 60-75         |
+| $C_v$ (m²/yr)          | 1.5                     | 1.3                | 1.5                      | 0.3-3.2     | 0.7-2.4                   | 1.07                                       | 2.0                         | 1.2                                        | 1.0                                        | 2.0               | 1.8-2.6       |
+| $k$ (m/s)              | $1.0 \times 10^{-7}$    | -                  | $0.1-1.0 \times 10^{-8}$ | -           | $1.2-3.2 \times 10^{-10}$ | $1.0 \times 10^{-9}$                       | $0.96-3.2 \times 10^{-9}$   | -                                          | -                                          | -                 | -             |
+| $e_0$ (@ $p_0'$ =1kPa) | -                       | -                  | 2.3                      | 1.9         | 2.2-2.6                   | 2.3                                        | 1.5-2.0                     | -                                          | -                                          | 1.0-2.3           | 1.8-2.0       |
+| $C_c$                  | 1.0                     | 0.4                | 1.0                      | -           | 0.5-0.8                   | 0.7                                        | 0.5-0.9                     | -                                          | -                                          | 0.5-0.8           | 0.6-0.7       |
+| Nat. mc (%)            | up to 100               | >100               | 100                      | -           | 24-97                     | 68                                         | 60-90                       | 70-83                                      | 88                                         | 50-90             | 60-75         |
+| Density (kN/m³)        | 15                      | -                  | 13-17                    | -           | 14-20                     | 16                                         | -                           | 15.7-16                                    | 15.6                                       | 8-11              | 15.5-16.5     |
+| $C_R$                  | -                       | 0.4                | 0.3                      | -           | -                         | -                                          | 0.2-0.3                     | -                                          | -                                          | -                 | -             |
+| $c'$ (kPa)             | -                       | -                  | 0                        | -           | -                         | -                                          | 2.5                         | -                                          | -                                          | 0                 | -             |
+| $\phi'$ (deg)          | -                       | -                  | 28                       | -           | -                         | 29                                         | -                           | -                                          | -                                          | 19-30             | -             |
+
+**Notes:**
+
+- CLK - Chek Lap Kok
+- LCK - Lai Chi Kok
+- TC - Tung Chung
+- NLE - North Lantau Expressway
+- CT10/
+- CT10/CT11 - Container Terminals 10 & 11
+- CPB - Castle Peak Bay
+
+\elandscape
+
+**Legend:**
+
+- Cc - Compression index
+- Cr - Compression
+
+## Soil Structure Interaction and DCM
 
 In this Section, a plane strain model will be used to study the load shear of the shear wall, and the particular focus is made on the load shearing between the DCM columns and the tributary soils and the stress concentration.
 
 Given the typical column width of 0.6m and spacing of 1.2m, the unit model at the area can be shown in Figure XXX. Hardening soil model will be adopted for MD and Mohr Column soil models is used for DCM columns. It is assumed that the stone columns are linear elastic and not subjected to consolidation process.
 
-For reclamation projects, the significant portion of the settlement are due to the compression of soft marine clay. Once treated, the total compression of this layer can be reduced significantly. Consider a typcial
+For reclamation projects, the significant portion of the settlement are due to the compression of soft marine clay. Once treated, the total compression of this layer can be reduced significantly.
 
 # Recommendation
 
@@ -364,18 +416,18 @@ Despite ongoing developments, as demonstrated above, Hypothesis B provides an el
 
 \pagebreak
 
+\setcounter{equation}{0}
+\renewcommand{\theequation}{A.\arabic{equation}}
 
-# Appendix A - Example of Derivation of the Permeability {-}
+# Appendix A - Example of Derivation of Soil Permeability {-}
 
-Certainly! Here is the digitized version with equations wrapped using `$$ \begin{equation} ... \end{equation} $$`:
+The determination of soil permeability is known to have high uncertainties. We will assume that the coefficient of consolidation is known, as it is typically back-calculated from field observations. In the recent reclamation project, a value of $c_h = c_v = 1.2 , \text{m}^2/\text{year}$ was adopted and found to fit the monitoring data well.
 
----
-
-
+**Example: Permeability at 2.5m below the seabed level**
 
 $$
-\begin{equation}
-\sigma_v' \text{ at } 2.5 \text{ m} = \sigma_v' = 2.5 \times 6 = 15 \text{ kPa}
+\begin{equation}[label@eq_]
+\sigma_v' = \gamma'\cdot H = 6\cdot 2.5 = 15 \text{kPa}
 \end{equation}
 $$
 
@@ -399,17 +451,18 @@ $$
 
 $$
 \begin{equation}
-C_h = \frac{E_{eod} \cdot K}{\gamma_w}
+C_h = \frac{E_{eod} \cdot k_h}{\gamma_w}
 \end{equation}
 $$
 
 $$
 \begin{equation}
-\Rightarrow K = \frac{\gamma_w \cdot C_h}{E_{eod}}
+\Rightarrow k_h = \frac{\gamma_w \cdot C_h}{E_{eod}}
 \end{equation}
 $$
 
 Given:
+
 $$
 \begin{equation}
 C_h = 1.2 \text{ m}^2/\text{year}
@@ -427,7 +480,6 @@ $$
 K_h = 3.81 \times 10^{-4} \text{ m}^2/\text{day}
 \end{equation}
 $$
-
 
 $$
 \begin{equation}
@@ -449,12 +501,6 @@ $$
 
 $$
 \begin{equation}
-r_e = 0.67 \text{ m}
-\end{equation}
-$$
-
-$$
-\begin{equation}
 n = \frac{d_e}{d_{w}} = \frac{0.67 \times 2}{0.066} = 20.303
 \end{equation}
 $$
@@ -470,3 +516,92 @@ $$
 r_e = \frac{1.26}{2} = 0.63 \text{ m}
 \end{equation}
 $$
+
+\pagebreak
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{B.\arabic{equation}}
+
+# Appendix B - Example of Derivation of Soil Permeability {-}
+
+In the absence of triaxial data for $E_{50}$, the stiffness of soft soils can be estimated using empirical relations. The undrained elastic modulus of clay is commonly taken as $E_u = 300\cdot s_u$, which seems to be widely accepted in industry based on early work by Jamiolkowski (1981).
+
+The undrained shear strength of soft clay can be estimated using the concept of Stress History And Normalised Engineering Properties (SHANSEP), where the undrained strength of over-consolidated clay can be correlated to that of normally consolidated clay using the relationship in Eq.(\ref{eq_su_shansep}).
+
+$$
+\begin{equation}[label@eq_su_shansep]
+S_u = S \cdot OCR^m \cdot \sigma'_{\text{v}}
+\end{equation}
+$$
+
+Typically, for a normally consolidated clay, 0.22 can be adopted for a quick assessment.
+
+$$
+\begin{equation}
+S_u = 0.22 \cdot \sigma'_{\text{v}}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+E_u = 300 \cdot S_u = 300 \cdot (0.22 \cdot \sigma'_{\text{v}}) = 66 \cdot \sigma'_{\text{v}}
+\end{equation}
+$$
+
+In Plaxis, the input parameter for Hardening Soils are effective stiffness, we know that the stiffness of shear modulus for drained and undrained should be equal, as water does not take shear stress.
+
+$$
+\begin{equation}
+G' = G_u \Leftrightarrow \frac{E'}{2(1+\nu)} = \frac{E_u}{2(1+\nu_u)}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+\nu_u = 0.5 \quad \Rightarrow \quad E' = \frac{2(1+\nu')}{3} E_u
+\end{equation}
+$$
+
+In addition, the reference stress for $E_{50}^{ref}$ and $E_{oed}^{ref}$ refer to $\sigma'_3$, i.e., the confining pressure during the triaxial testing, we will need to work out the relationship with $\sigma_h'$
+
+$$
+\begin{equation}
+\sigma'_{\text{h}} = k_0 \cdot \sigma'_{\text{v}} \quad \Rightarrow \quad \sigma'_{\text{v}} = \frac{1}{k_0} \cdot \sigma'_{\text{h}}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+E_{50} = \frac{2}{3} \cdot (1+\nu') \cdot 66 \cdot \frac{1}{k_0} \cdot \sigma'_{\text{h}}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+E_{50} = 44 \cdot (1+\nu') \cdot \frac{1}{k_0} \cdot \sigma'_{\text{h}}
+\end{equation}
+$$
+
+**Example:**
+
+$$
+\begin{equation}
+\sigma'_{\text{ref}} = 100 \, \text{kPa}, \quad k_0 = 1 - \sin 26^\circ = 0.56, \quad \nu' = 0.2
+\end{equation}
+$$
+
+$$
+\begin{equation}
+E_{50} = 44 \cdot (1 + 0.2) \cdot \frac{1}{0.56} \cdot 100 = 6428.6 \, \text{kPa}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+E_{50} = 4.428 \, \text{MPa}
+\end{equation}
+$$
+
+\pagebreak
+
+# Reference {-}

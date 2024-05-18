@@ -19,6 +19,8 @@ _permeability: &perm
   PermVertical: 1.94e-10 #m/day
   VoidRatioDependency: True
   Ck: 1.2
+  # VoidRatioDependency: False
+  # Ck: 1.2
 
 Linear_Elastic:
   #General
