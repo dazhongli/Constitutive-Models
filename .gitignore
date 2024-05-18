@@ -6,3 +6,5 @@
 *.log
 *.xlsm
 models/*
+*.png
+*.svg

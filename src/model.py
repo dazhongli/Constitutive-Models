@@ -88,7 +88,11 @@ def build_model(proj,
     g_i.SoilContour.initializerectangular(0, seabed-thk, width, seabed)
     dict_soil_sample = mat_dicts[material_name].copy()
     e0 = dict_soil_sample['eInit']
-    Cc = dict_soil_sample['CC']
+    try:
+        Cc = dict_soil_sample['CC']
+    except: # if Camclay, CC is not defined, rather by `lambda`
+        Cc = dict_soil_sample['lambda']*1.2
+
     gamma = dict_soil_sample['gammaSat']
     for ix, i in enumerate(np.arange(0,thk,interval)):
         print(ix, i)
@@ -126,7 +130,9 @@ def build_model(proj,
         if (gw_bc.x_start[g_i.InitialPhase].value==width) and (gw_bc.x_end[g_i.InitialPhase].value==width):
             gw_bc.Behaviour[g_i.InitialPhase] = 'closed'
         else:
-            gw_bc.Behaviour[g_i.InitialPhase] = 'seepage'
+            pass
+            # gw_bc.Behaviour[g_i.InitialPhase] = 'seepage'
+
         # g_i.activate(gw_bc,g_i.InitialPhase)
     water_level = g_i.waterlevel((-3,1),(10,1))
     g_i.setglobalwaterlevel(water_level, g_i.InitialPhase)
