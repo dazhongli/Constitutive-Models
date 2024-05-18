@@ -6,11 +6,11 @@ bibliography: [constitutive_model.bib, ../stone-column/reclamation.bib]
 
 # Introduction
 
-In the offshore geological conditions of Hong Kong, the bearing stratum for Deep Cement Mixing (DCM) treatment for seawalls typically consists of alluvium, which exhibits a layered soil composition resulting from complex depositional processes. To ensure overall stability, a numerical assessment using the finite element method is commonly employed to evaluate slope stability, bearing resistance, and sliding failures. Stability analyses often utilize a strength reduction approach, wherein the soil strength is gradually reduced by a multiplier until the model fails to converge.
+In the offshore geological conditions of Hong Kong, the bearing stratum for Deep Cement Mixing (DCM) treatment for seawalls typically consists of alluvium, which exhibits a layered soil composition resulting from complex depositional processes. To ensure overall stability, a numerical assessment using the finite element method is commonly employed to evaluate slope stability, bearing resistance, and sliding failures. Stability analyses often adopt a strength reduction approach, wherein the soil strength is gradually reduced by a multiplier until the model fails to converge.
 
 Furthermore, in addition to stability assessment, finite element analyses are utilized to conduct more detailed deformation analysis, including the evaluation of consolidation settlement and seawall movement. These analyses are particularly valuable when dealing with composite ground and the time-dependent response of the system, as classical analytical solutions may not adequately capture these complexities due to simplified assumptions.
 
-This note offers commentaries on the material models available in Plaxis. It also provides suggested typical soil parameters that can be utilized for preliminary analysis. However, it is essential for the designer to consider site-specific data and possess a comprehensive understanding of advanced soil models to ensure a professional and accurate assessment of the stability of DCM-treated seawalls in the offshore geological conditions of Hong Kong.
+This Note offers commentaries on the material models available in Plaxis. It also provides suggested typical soil parameters that can be used for preliminary analysis. However, it is essential for the designer to consider site-specific data and possess a comprehensive understanding of advanced soil models to ensure a professional and accurate assessment of the stability of DCM-treated seawalls in the offshore geological conditions of Hong Kong.
 
 # Stability Analyses
 
@@ -43,6 +43,8 @@ Since the failure criterion for both DCM and MD are stress independent, reducing
 
 Kitazume et al. reported that a 15% of the UCS strength is used in Japan with wet mixing method and the in US practice, tensile strength is generally not relied on in the design [@FHADM2013, P.46]. It is recommended that "Tension cut-off" is always activated and the tensile strength is set as 0 kPa.
 
+Typical design parameters adopted for the undrained analyses are included in **Table \ref{t_D_input}**
+
 ## Drained Analyses - Long-term Seawall Stability
 
 Long-term stability analyses are conducted considering sufficient time for excess pore water pressure to dissipate. This aspect primarily governs design situations involving stiff/hard clay existing at shallower depth, where the undrained strength exceeds the drained strength. However, in the case of DCM design in the context of the offshore geological condition in Hong Kong, presence of the stiff/hard clay is not common, and the long-term stability using drained parameters do not typically govern the design.
@@ -63,45 +65,27 @@ $$
 
 # Settlement Assessment
 
-Compared the `Mohr-Coulumb` model, the advanced soil models have several features that we are well understood for soft soils, therefore it is no point for using Mohr-Coulomb model for deformation analysis, unless an crude estimate is warranted in the design.
+Compared to the Mohr-Coulomb model, the advanced soil models have several features that are well-suited for modeling soft soils. The key advantages include:
 
-- nonlinear stiffness of soils
-- higher unloading-reloading stiffness
+- Consideration of nonlinear stiffness of soils  
+- Ability to capture higher unloading-reloading soil stiffness
+
+Given these capabilities that better reflect the behavior of soft soils, there is little justification for using the simpler Mohr-Coulomb model in deformation analyses, unless a very crude estimate suffices for initial design scoping purposes. The advanced models are better equipped to predict consolidation behavior.
 
 ## Available Advanced Soil Models
 
-There are several available advanced soil models available in Plaxis that are intended for soft clay including:
+There are several advanced soil models available in Plaxis that are intended for modeling soft clay, including:
 
-- Modified Camclay model (MCC)
+- Modified Camclay model (MCC)  
 - Soft Soil Model (SS)
 - Soft Soil Creep Model (SSC)
 - Hardening Soil Model (HS)
 
-Other soil models exsit taking account of strength annostrop, NGI ADP model and cyclic behaviour soils UDCAM-S model which are generally not the primary concern for a reclamation projects.
+Other soil models exist that take into account strength anisotropy, such as the NGI-ADP model, or cyclic behavior in soils like the UDCAM-S model; however, these are generally not the primary design concern for reclamation projects and hence will not be discussed.
 
-To investigate the predictive capability of different material models for consolidation analyese, a series of FEA experiments were carried out and results are compared with the classic
-
-## Settlement Predictive Capacities of the Existing Advanced Soil Models
-
-Mohr-Coulomb materials are known to not perform well for settlement assessment. Therefore, the movement obtained using the Mohr-Coulomb model should be considered as a first-order approximation. We will limit our discussion on the constitutive soil models within Plaxis which are most familiar to the local practicing engineers.
-
-To calculate the time-rate of the settlement, advanced soil models should be used. The available advanced soil models that are available in Plaxis include the following. Other than typical engineering properties, some unique input for the advanced models are presented in **Table \ref{t_soil_model}**.
-
-Table: Advanced Materials Models for Soils in Plaxis \label{t_soil_model}
-
-| Soil Model            | Required Input                               | Remarks                        |
-| --------------------- | -------------------------------------------- | ------------------------------ |
-| Modified Camclay      | $\lambda = \frac{C_c}{2.3}$                  |                                |
-|                       | $\kappa = \frac{C_s}{2.3}$                   |                                |
-|                       | $M\_{SCL} = Eq.(\ref{eq_MMCC})               |                                |
-| Soil Soil Model       | $\lambda^* = \frac{C_s}{2.3(1+e_0)}$         |                                |
-|                       | $\kappa^* \approx \frac{2.0C_s}{2.3(1+e_0)}$ |                                |
-| Soil Soil Creep Model | $\lambda^*, \kappa^*$                        |                                |
-| Hardening Soil Model  | $E_{50}^{ref}, E_{oed}^{ref}, E_{ur}^{ref}$  | Refer to Section \ref{HS_Parm} |
+To investigate the predictive capabilities of different material models for consolidation analyses, a series of FEA experiments were carried out and results are compared with classic consolidation theory.
 
 ### Modified Camclay Model (MCC)
-
-MCC is s classic critical state model
 
 According @Plaxis2021Mat[p.98], MCC model can be treated as an educational model available in Plaxis, its use in practical application is not recommended.
 
@@ -120,6 +104,8 @@ M =
 \end{cases}
 \end{equation}
 $$
+
+![Drucker-Prager vs Mohr Columb \label{f_DP_VS_MD}](image/DP_VS_MC_yield_surface.png){width=450}
 
 ### Soft Soil Model
 
@@ -144,16 +130,6 @@ It should be noted that total magnitude of the consolidation is relatively less 
 ![Axisymetric Plaxis Model \label{f_plaxi_model}](image/mode_set_up_Layer%201_copy_1.pdf){width=250}
 
 The following typical design parameters will be used for this calibration purpose.
-
-Table:Design Parameters for Normally Consolidated Marine Deposit \label{t_design_params}
-
-| Desorption                    |  Notation |  Value |
-| ----------------------------- | --------: | -----: |
-| Compression Index             |     $C_c$ |    1.2 |
-| Initial Void Ratio            |     $e_0$ |    2.0 |
-| Over Consolidation Ratio      |     $OCR$ |    1.0 |
-| Submerged unit weight of soil | $\gamma'$ |    6.0 |
-| Thickness of Soils            |       $H$ | varies |
 
 In all analyses, **Undrained A** in Plaxis is used consistently cross all soil models.
 
@@ -239,7 +215,6 @@ It should be noted that in this series of analyses, we assumed that permeability
 
 ![Degree of Consolidation for Various Soil Model (Constant Permeability) \label{f_doc_const_k}](image/DOC_OCR_1_ck_no_activate.pdf){width=650}
 
-
 ## Consolidation with Void Ratio Dependency
 
 As we have demonstrated in the preceding section with the assumption of constant permeability throughout the entire consolidation process, the rate of consolidation depends on the applied stresses. In this section, we will explain the cause of this phenomenon and further considerations necessary to make the numerical modelling consistent with classic Terzaghi's consolidation theory.
@@ -264,7 +239,7 @@ As shown in **Figure \ref{f_stress_strain}**, as the soil consolidates, it gets 
 
 ![Degree of Consolidation under Different Consolidation Pressure with Constant Permeability\label{f_doc_k_const}](image/Soft_Soil_Creep_H_10-DoC%20constant%20k.pdf){width=450}
 
-In Terzaghi's classic solution, the coefficient of consolidation is assumed to remain constant throughout the entire consolidation process. This simplifying assumption allowed Terzaghi to obtain a solution to the governing partial differential equations. To maintain consistency with Terzaghi's conceptual model, wherein the coefficient remains unchanged over time, the numerical modeling must likewise satisfy $c_{h,1} = c_{h,2}$. In other words, the coefficient of consolidation calculated at any two points in time during the consolidation process must be equal. This constraint is necessary to achieve solutions that align with Terzaghi's theory, in which consolidation is modeled as a linear, time-dependent process governed by a fixed coefficient.  
+In Terzaghi's classic solution, the coefficient of consolidation is assumed to remain constant throughout the entire consolidation process. This simplifying assumption allowed Terzaghi to obtain a solution to the governing partial differential equations. To maintain consistency with Terzaghi's conceptual model, wherein the coefficient remains unchanged over time, the numerical modeling must likewise satisfy $c_{h,1} = c_{h,2}$. In other words, the coefficient of consolidation calculated at any two points in time during the consolidation process must be equal. This constraint is necessary to achieve solutions that align with Terzaghi's theory, in which consolidation is modeled as a linear, time-dependent process governed by a fixed coefficient.
 
 $$
 \begin{equation}[label@eq_k_stress]
@@ -306,7 +281,7 @@ In the preceding sections, we have demonstrated that it is necessary to update t
 
 In the initial design phase, the coefficient of consolidation is typically used and often this value is based on back-calculated data from previous, similar projects. Based on experience from a recent reclamation project, a lumped $c_h = 1.2\;m^2/\text{year}$ is considered appropriate. This lumped parameter is intended to already account for effects like soil smear and well resistance that are typically difficult to quantify with full accuracy during the initial design stage.
 
-The results presented so far are based on a single layer the permeability is back-calculated at the mid point of the soil layer (refer to **Appendix A** for an example of 2.5m).  We will further divide the soil layers in to smaller segments and specify the permeability at different levels (as shown in **Figure \ref{f_soil_segment}**), in such a way, the calculated results will theoretically approach a constant $c_h$ assumption. In this exercise, Hardening Soil Model will be used.
+The results presented so far are based on a single layer the permeability is back-calculated at the mid point of the soil layer (refer to **Appendix A** for an example of 2.5m). We will further divide the soil layers in to smaller segments and specify the permeability at different levels (as shown in **Figure \ref{f_soil_segment}**), in such a way, the calculated results will theoretically approach a constant $c_h$ assumption. In this exercise, Hardening Soil Model will be used.
 
 ![Soil Segments \label{f_soil_segment}](image/soi_segment.pdf){width=450}
 
@@ -592,15 +567,83 @@ $$
 
 $$
 \begin{equation}
-E_{50} = 44 \cdot (1 + 0.2) \cdot \frac{1}{0.56} \cdot 100 = 6428.6 \, \text{kPa}
+E_{50}^{ref} = 44 \cdot (1 + 0.2) \cdot \frac{1}{0.56} \cdot 100 = 6428.6 \, \text{kPa}
 \end{equation}
 $$
 
 $$
 \begin{equation}
-E_{50} = 4.428 \, \text{MPa}
+E_{50}^{ref}= 4.428 \, \text{MPa}
 \end{equation}
 $$
+
+\pagebreak
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{C.\arabic{table}}
+
+# Appendix C - Plaxis Input Parameters{-}
+
+**Table \ref{t_C_input}** summarizes the adopted design parameters used for the numerical experiments presented in this Note. It should be noted the scenario with $OCR=2$ has also been tested and similar findings were observed.
+
+Table:Summary of Plaxis Input Parameters \label{t_C_input}
+
+| **Parameter**             | **Cam Clay** | **Soft Soil** | **Soft Soil Creep** | **Hardening Soil** |
+| ------------------------- | -----------: | ------------: | ------------------: | -----------------: |
+| **Physical Properties**   |              |               |                     |                    |
+| $\gamma_{\text{unsat}}$   |           16 |            16 |                  16 |                 16 |
+| $\gamma_{\text{sat}}$     |           16 |            16 |                  16 |                 16 |
+| $e_{\text{init}}$         |          2.0 |           2.0 |                 2.0 |                2.0 |
+| $K_0$ Determination       |    Automatic |     Automatic |           Automatic |          Automatic |
+| **Mechanical Properties** |              |               |                     |                    |
+| $\lambda$                 |        0.521 |             - |                   - |                  - |
+| $\kappa$                  |       0.0651 |             - |                   - |                  - |
+| $\nu_{\text{UR}}$         |         0.25 |          0.25 |                0.25 |               0.25 |
+| $M$                       |        0.984 |             - |                   - |                  - |
+| Use Alternatives          |        False |          True |                True |               True |
+| $C_c$                     |            - |           1.2 |                 1.2 |                1.2 |
+| $C_s$                     |            - |         0.149 |               0.149 |              0.149 |
+| $C_{\alpha}$              |            - |             - |                0.05 |                  - |
+| OCR                       |            1 |             1 |                   1 |                  1 |
+| **Strength Parameters**   |              |               |                     |                    |
+| $c_{\text{ref}}$          |         0.01 |          0.01 |                0.01 |               0.01 |
+| $\psi$                    |          0.0 |           0.0 |                 0.0 |                0.0 |
+| $\phi$                    |           25 |            25 |                  25 |                 25 |
+| $R_{\text{inter}}$        |         0.75 |          0.75 |                0.75 |               0.75 |
+| **Permeability**[^1]      |              |               |                     |                    |
+| Void Ratio Dependency     |         True |          True |                True |               True |
+| $C_k$                     |          1.2 |           1.2 |                 1.2 |                1.2 |
+| **Additional Properties** |              |               |                     |                    |
+| Drainage Type             |  Undrained A |   Undrained A |         Undrained A |        Undrained A |
+| Tension Cut-Off           |         True |          True |                True |               True |
+
+[^1]: Horizontal Permeability is calculated to achieve $c_h = 1.2\text{m}^2/\text{year}$, refer to **Appendix A**
+
+\pagebreak
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{D.\arabic{table}}
+
+# Appendix D - Recommended Design Parameters for Stability Analyses{-}
+
+In the absence of site-specific test data, design parameters from **Table \ref{t_D_input}** can be used as a preliminary reference for initial design work; however, it should be noted the alluvium can be highly variable and underlying soft clay may also be present. Adequate geotechnical investigation data, particularly CPT data, should be reviewed to better inform and assist in the final design.
+
+Table:Typical Design Parameters \label{t_D_input}
+
+| **Materials**    | **$\gamma_{sat}$** | **$c'$** |  **$\phi'$** |              **$s_u$** |                       **$E$** |
+| ---------------- | -----------------: | -------: | -----------: | ---------------------: | ----------------------------: |
+|                  |             [unit] |    [kPa] |     [Degree] |                  [kPa] |                         [kPa] |
+| Fill             |                 19 |        0 |           32 |                    n/a |          $10,000 \sim 15,000$ |
+| Rock Fill        |                 20 |        0 |           42 |                    n/a |          $40,000 \sim 50,000$ |
+| Deep-mixed Soils |                 16 |      n/a |          n/a |                    500 | $(100 \sim 300) \text{UCS}^*$ |
+| Marine Deposit   |                 16 |        0 |           25 | $0.22 \cdot \sigma_v'$ |        $300 \cdot s_u^\wedge$ |
+| Alluvial Clay    |                 18 |        0 |           28 |                  40~70 |        $300 \cdot s_u^\wedge$ |
+| Alluvial Sand    |                 19 |        0 | $32 \sim 36$ |                    n/a |          $40,000 \sim 50,000$ |
+
+**Note:**
+
+- $^\wedge$: Typical assumption, following @Jamiolkowski1981.
+- $^*$: Recommendation from @FHADM2013, 100 for dry and 300UCS for wet mixing
 
 \pagebreak
 
